@@ -27,6 +27,7 @@ public class UserService {
 
         try {
             //this is persistence unit name
+
             emf = Persistence.createEntityManagerFactory("relief_projects");
             em = emf.createEntityManager();
             UserRepository userRepo = new UserRepository(em);
