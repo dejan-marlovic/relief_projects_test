@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 
 @Entity
-// Use backticks to avoid conflicts with SQL reserved keywords, would not need to use @Table otherwise
 @Table(name = "users")
 public class User {
 

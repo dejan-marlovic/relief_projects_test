@@ -1,8 +1,12 @@
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employees")
+@SQLDelete(sql = "UPDATE employees SET is_deleted = true, deleted_at = NOW() WHERE employee_id = ?")
+@Where(clause = "is_deleted = false") // Automatically exclude soft-deleted records
 public class Employee {
 
     @Id
@@ -16,7 +20,7 @@ public class Employee {
     @Column(name = "last_name", nullable = false, length = 255)
     private String lastName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", referencedColumnName = "position_id")
     private Position position;
 
@@ -26,6 +30,11 @@ public class Employee {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    // Custom soft delete method
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
     // Getters and Setters
     public Long getId() {
         return id;
