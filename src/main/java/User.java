@@ -1,4 +1,7 @@
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.math.BigInteger;
@@ -7,6 +10,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET isDeleted = true, deletedAt = NOW() WHERE user_id = ?")
+@Where(clause =  "isDeleted = false") // Automatically exclude soft-deleted records
 public class User {
 
     User(){}
@@ -45,6 +50,11 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public void softDelete(){
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 
     // Getters and Setters
     public Long getId() {
