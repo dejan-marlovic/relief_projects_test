@@ -39,6 +39,7 @@ public class UserService {
             //so we can fetch data as object or store it in the database
             UserRepository userRepo = new UserRepository(em);
             PositionRepository positionRepo = new PositionRepository(em);
+            EmployeeRepository employeeRepo = new EmployeeRepository(em);
 
             Position position = positionRepo.findByName("Project Assistant");
 
@@ -47,8 +48,15 @@ public class UserService {
             positionRepo.save(newPosition);
 
             // Fetch the existing Employee from the database (assuming employee ID 1 exists)
-            Employee employee = em.find(Employee.class, 1L);
+            Employee employee = employeeRepo.findByEmployeeId(1);
 
+            Employee newEmployee = new Employee();
+
+            newEmployee.setFirstName("Test test");
+            newEmployee.setLastName("Testy");
+            newEmployee.setPosition(position);
+
+            employeeRepo.save(newEmployee);
 
             if (position != null && employee != null) {
                 // Create a new User instance and associate it with the Employee
