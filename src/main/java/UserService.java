@@ -40,6 +40,7 @@ public class UserService {
             UserRepository userRepo = new UserRepository(em);
             PositionRepository positionRepo = new PositionRepository(em);
             EmployeeRepository employeeRepo = new EmployeeRepository(em);
+            CurrencyRepository currencyRepo = new CurrencyRepository(em);
 
             Position position = positionRepo.findByName("Project Assistant");
 
@@ -51,6 +52,11 @@ public class UserService {
             Employee employee = employeeRepo.findByEmployeeId(1);
 
             Employee newEmployee = new Employee();
+            Currency currency = new Currency();
+            currency.setName("TEST");
+            currency.setDescription("TEsty test");
+            currencyRepo.save(currency);
+
 
             newEmployee.setFirstName("Test test");
             newEmployee.setLastName("Testy");

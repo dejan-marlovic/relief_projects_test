@@ -13,4 +13,22 @@ public class CurrencyRepository {
     public CurrencyRepository(EntityManager em) {
         this.em = em;
     }
+
+
+    public List<Currency> findAll(){
+        return em.createQuery("SELECT c FROM Currency c", Currency.class)
+                .getResultList();
+    }
+
+    public Currency findByName(String name){
+        return em.createQuery("SELECT c FROM Currency c WHERE c.name = :name", Currency.class)
+                .setParameter("name",name)
+                .getSingleResult();
+    }
+
+    public void save(Currency currency){
+        em.getTransaction().begin();
+        em.persist(currency);
+        em.getTransaction().commit();
+    }
 }
