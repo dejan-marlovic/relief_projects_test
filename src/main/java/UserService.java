@@ -2,6 +2,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDateTime;
+
 
 public class UserService {
 
@@ -26,15 +28,26 @@ public class UserService {
         EntityManager em = null;
 
         try {
-            //relief_projects is persistence unit name from persistence.xml
+            //relief_projects is persistence unit name that we defined in persistence.xml
+            //we use pre-defined persistence unit to create entity manager factory
             emf = Persistence.createEntityManagerFactory("relief_projects");
-            em = emf.createEntityManager();
-            UserRepository userRepo = new UserRepository(em);
 
-            Position position = em.find(Position.class, 1L); // Replace 1L with the correct position ID
+            //we crate entity manager from entity manager factory object
+            em = emf.createEntityManager();
+
+            //we inject em object into our repositories
+            //so we can fetch data as object or store it in the database
+            UserRepository userRepo = new UserRepository(em);
+            PositionRepository positionRepo = new PositionRepository(em);
+
+            Position position = positionRepo.findByName("Project Assistant");
+
+            Position newPosition = new Position();
+            newPosition.setPositionName("Test new Position");
+            positionRepo.save(newPosition);
 
             // Fetch the existing Employee from the database (assuming employee ID 1 exists)
-            Employee employee = em.find(Employee.class, 1L); // Replace 1L with th
+            Employee employee = em.find(Employee.class, 1L);
 
 
             if (position != null && employee != null) {
@@ -44,7 +57,7 @@ public class UserService {
                 user.setPasswordHash(User.hashPassword("hashedPassword123"));
                 user.setEmail("johndoe@example.com");
                 user.setEmployee(employee); // Link the user to the employee (foreign key relation)
-
+                user.setCreatedAt(LocalDateTime.now());
                 userRepo.save(user);
 
                 System.out.println("User successfully inserted!");

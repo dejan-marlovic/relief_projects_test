@@ -7,7 +7,7 @@ public class UserRepository {
 
     /**
      * Injection via constructor
-     * @param em injected EntityManager object?
+     * @param em injected EntityManager object
      */
     public UserRepository(EntityManager em){
         this.em = em;
